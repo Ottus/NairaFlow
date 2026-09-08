@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Settings and Profile — NairaFlow Fintech Dashboard">
+  <meta name="theme-color" content="#0a6e3d" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1c23" media="(prefers-color-scheme: dark)">
+  <title>Settings — NairaFlow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header" aria-label="App header">
+    <div class="header-brand">
+      <a href="index.html" class="logo" aria-label="NairaFlow home">
+        <span class="logo-icon">₦</span>
+        <span class="logo-text">NairaFlow</span>
+      </a>
+    </div>
+
+    <div class="header-actions">
+      <button class="notification-btn" aria-label="View notifications" type="button">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-avatar" aria-label="User profile: Chinedu Okafor">
+        <span class="avatar-initials">CO</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" aria-label="Main navigation">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="index.html" class="nav-link" aria-label="Go to Dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" aria-label="Go to Send Money">
+          <span class="nav-icon">💸</span>
+          <span class="nav-label">Send Money</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" aria-label="Go to Savings">
+          <span class="nav-icon">🏦</span>
+          <span class="nav-label">Savings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" aria-label="Go to Transactions">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Transactions</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="settings.html" class="nav-link nav-link--active" aria-current="page" aria-label="Go to Settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" aria-label="Settings content">
+    
+    <div class="section-header">
+      <h1>Profile & Settings</h1>
+      <p class="text-secondary">Manage your account details and preferences.</p>
+    </div>
+
+    <div class="settings-grid">
+      
+      <!-- Profile Information -->
+      <section class="card profile-card" aria-label="User profile details">
+        <h2>Personal Information</h2>
+        <div class="profile-info">
+          <div class="profile-avatar-large">
+            <span class="avatar-initials">CO</span>
+          </div>
+          <div class="profile-details">
+            <p class="profile-name">Chinedu Okafor</p>
+            <p class="profile-meta">Joined September 2024</p>
+            <span class="badge pill--success">Verified Account</span>
+          </div>
+        </div>
+
+        <form class="settings-form" novalidate>
+          <div class="form-field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" value="chinedu.okafor@example.com" readonly>
+            <small class="field-help">Contact support to change your primary email.</small>
+          </div>
+          <div class="form-field">
+            <label for="phone">Phone Number (BVN Linked)</label>
+            <input type="tel" id="phone" value="+234 801 234 5678" readonly>
+          </div>
+        </form>
+      </section>
+
+      <!-- Security / Change Password -->
+      <section class="card security-card" aria-label="Security settings">
+        <h2>Security</h2>
+        <form class="settings-form" novalidate>
+          <div class="form-field">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" required>
+          </div>
+          <div class="form-field">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" required pattern=".{8,}">
+            <small class="field-help">Must be at least 8 characters.</small>
+            <small class="error-msg">Password is too short.</small>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary">Update Password</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Preferences -->
+      <section class="card preferences-card" aria-label="Notification preferences">
+        <h2>Notifications</h2>
+        <div class="preference-list">
+          <div class="preference-item">
+            <div class="preference-info">
+              <h3>Email Receipts</h3>
+              <p>Receive transaction receipts via email.</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked aria-label="Toggle email receipts">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="preference-item">
+            <div class="preference-info">
+              <h3>Push Notifications</h3>
+              <p>Alerts for incoming transfers and security notices.</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked aria-label="Toggle push notifications">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="preference-item">
+            <div class="preference-info">
+              <h3>Marketing Emails</h3>
+              <p>Updates on new features and savings plans.</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" aria-label="Toggle marketing emails">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section (using <details>) -->
+      <section class="card faq-card" aria-label="Frequently Asked Questions">
+        <h2>Help & FAQ</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>How do I upgrade my account tier?</summary>
+            <div class="faq-content">
+              <p>To upgrade from Tier 1 to Tier 3, you need to provide your BVN and a valid government-issued ID (NIN or Passport). Visit the verification portal to begin.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>Why was I charged a maintenance fee?</summary>
+            <div class="faq-content">
+              <p>NairaFlow does not charge monthly maintenance fees. If you see a debit, it is likely a CBN-mandated stamp duty charge on transfers above ₦10,000.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I reset my transaction PIN?</summary>
+            <div class="faq-content">
+              <p>Go to Security > Reset PIN. You will need to answer your security questions and enter an OTP sent to your registered phone number.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- Danger Zone -->
+      <section class="card danger-zone" aria-label="Danger zone">
+        <h2>Danger Zone</h2>
+        <p class="text-secondary mb-4">Once you delete your account, there is no going back. All balances must be transferred out first.</p>
+        <button type="button" class="btn btn--danger">Delete Account</button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer" aria-label="App footer">
+    <p>&copy; 2026 NairaFlow. All rights reserved.</p>
+    <nav aria-label="Footer links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Help Center</a>
+    </nav>
+  </footer>
+
+</body>
+</html>
