@@ -409,6 +409,23 @@
     }
   }
 
+  /* ---- Sidebar Hamburger Toggle (tablet & mobile) ---- */
+  .sidebar-toggle-bar,
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .sidebar-close {
+    display: none;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: oklch(0.15 0.02 250 / 0.55);
+    z-index: calc(var(--z-modal) - 1);
+  }
+
   /* ---- Main Content Area ---- */
   .main-content {
     padding: var(--space-6) var(--space-8);
@@ -962,6 +979,39 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    animation: savings-card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+    @media (prefers-reduced-motion: no-preference) {
+      &:nth-child(1) { animation-delay: 0s; }
+      &:nth-child(2) { animation-delay: 0.1s; }
+      &:nth-child(3) { animation-delay: 0.2s; }
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-brand-light);
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-brand), var(--color-brand-light));
+      transition: left var(--transition-base);
+    }
+
+    @media (hover: hover) {
+      &:hover::before {
+        left: 0;
+      }
+    }
 
     .savings-card-header {
       display: flex;
@@ -976,6 +1026,7 @@
       background: var(--color-brand-subtle);
       padding: var(--space-1) var(--space-2);
       border-radius: var(--radius-sm);
+      transition: background var(--transition-fast), color var(--transition-fast);
     }
 
     .savings-description {
@@ -995,13 +1046,37 @@
       height: 100%;
       background: var(--color-brand);
       border-radius: var(--radius-full);
-      transition: width var(--transition-slow);
+      transition: width var(--transition-slow), background-color var(--transition-base);
     }
 
     .progress-text {
       font-size: var(--text-xs);
       color: var(--color-text-secondary);
       margin-top: var(--space-1);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        .savings-apy {
+          background: var(--color-brand);
+          color: white;
+        }
+
+        .progress-fill {
+          background: var(--color-brand-dark);
+        }
+      }
+    }
+  }
+
+  @keyframes savings-card-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -1470,6 +1545,97 @@
 
     .savings-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ============================================================
+     RESPONSIVE SIDEBAR — Hamburger toggle (tablet & mobile)
+     ============================================================ */
+  @media (max-width: 1024px) {
+    body {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "header"
+        "toggle"
+        "main"
+        "footer";
+    }
+
+    body.sidebar-open {
+      overflow: hidden;
+    }
+
+    .sidebar-toggle-bar {
+      grid-area: toggle;
+      display: flex;
+      align-items: center;
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .sidebar-toggle {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+      transition: background var(--transition-fast);
+
+      &:hover {
+        background: var(--color-brand-subtle);
+      }
+    }
+
+    .sidebar-toggle-line {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--color-text);
+      border-radius: var(--radius-full);
+    }
+
+    .sidebar {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(var(--sidebar-width), 85vw);
+      height: 100vh;
+      height: 100dvh;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform var(--transition-slow), visibility var(--transition-slow);
+      box-shadow: var(--shadow-lg);
+      z-index: var(--z-modal);
+    }
+
+    .sidebar.sidebar--open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-end;
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: var(--space-2);
+      border-radius: var(--radius-md);
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      transition: background var(--transition-fast), color var(--transition-fast);
+
+      &:hover {
+        background: var(--color-brand-subtle);
+        color: var(--color-brand-dark);
+      }
     }
   }
 }

@@ -39,9 +39,31 @@
   </header>
 
   <!-- ============================================================
+       SIDEBAR TOGGLE BAR (tablet & mobile)
+       ============================================================ -->
+  <div class="sidebar-toggle-bar" aria-label="Navigation menu">
+    <button
+      type="button"
+      class="sidebar-toggle"
+      id="sidebarToggle"
+      aria-controls="sidebarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation menu">
+      <span class="sidebar-toggle-line"></span>
+      <span class="sidebar-toggle-line"></span> 
+      <span class="sidebar-toggle-line"></span>
+    </button>
+  </div>
+
+  <!-- ============================================================
        SIDEBAR NAVIGATION
        ============================================================ -->
-  <nav class="sidebar" aria-label="Main navigation">
+  <nav class="sidebar" id="sidebarNav" aria-label="Main navigation">
+    <button
+      type="button"
+      class="sidebar-close"
+      id="sidebarClose"
+      aria-label="Close navigation menu">✕</button>
     <ul class="nav-list">
       <li class="nav-item">
         <a href="#" class="nav-link nav-link--active" aria-current="page" aria-label="Go to Dashboard">
@@ -68,13 +90,15 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link" aria-label="Go to Settings">
+        <a href="settings.html" class="nav-link" aria-label="Go to Settings">
           <span class="nav-icon">⚙️</span>
           <span class="nav-label">Settings</span>
         </a>
       </li>
     </ul>
   </nav>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
 
   <!-- ============================================================
        MAIN CONTENT
@@ -84,9 +108,9 @@
     <!-- Verdict Row — Balance Summary -->
     <section class="verdict-row" aria-label="Account balance summary">
       <div class="verdict-greeting">
-        <h1>Good afternoon, Chinedu 👋</h1>
+        <h1><span id="currentGreeting">Good afternoon</span>, Chinedu 👋</h1>
         <p class="verdict-date">
-          <time datetime="2026-09-07">Sunday, 7 September 2026</time>
+          <time id="currentDate" datetime="">Loading…</time>
         </p>
       </div>
       <div class="verdict-balance">
@@ -384,6 +408,9 @@
       <a href="#">Help Center</a>
     </nav>
   </footer>
+
+  <!-- Sidebar toggle (tablet & mobile) -->
+  <script src="sidebar.js"></script>
 
   <!-- Phase 2: JavaScript -->
   <script src="main.js" type="module"></script>

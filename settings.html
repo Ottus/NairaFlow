@@ -30,8 +30,28 @@
     </div>
   </header>
 
+  <!-- SIDEBAR TOGGLE BAR (tablet & mobile) -->
+  <div class="sidebar-toggle-bar" aria-label="Navigation menu">
+    <button
+      type="button"
+      class="sidebar-toggle"
+      id="sidebarToggle"
+      aria-controls="sidebarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation menu">
+      <span class="sidebar-toggle-line"></span>
+      <span class="sidebar-toggle-line"></span>
+      <span class="sidebar-toggle-line"></span>
+    </button>
+  </div>
+
   <!-- SIDEBAR -->
-  <nav class="sidebar" aria-label="Main navigation">
+  <nav class="sidebar" id="sidebarNav" aria-label="Main navigation">
+    <button
+      type="button"
+      class="sidebar-close"
+      id="sidebarClose"
+      aria-label="Close navigation menu">✕</button>
     <ul class="nav-list">
       <li class="nav-item">
         <a href="index.html" class="nav-link" aria-label="Go to Dashboard">
@@ -65,6 +85,8 @@
       </li>
     </ul>
   </nav>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
 
   <!-- MAIN CONTENT -->
   <main class="main-content" aria-label="Settings content">
@@ -204,6 +226,8 @@
       <a href="#">Help Center</a>
     </nav>
   </footer>
+
+  <script src="sidebar.js"></script>
 
 </body>
 </html>

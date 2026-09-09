@@ -52,6 +52,52 @@ function formatDate(isoString) {
 }
 
 // ============================================================
+// CURRENT DATE (updates on load and at each midnight)
+// ============================================================
+
+const currentDateEl = document.getElementById('currentDate');
+
+function renderCurrentDate() {
+  if (!currentDateEl) return;
+  const now = new Date();
+  currentDateEl.textContent = now.toLocaleDateString('en-NG', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  currentDateEl.dateTime = now.toISOString();
+}
+
+function scheduleNextDateUpdate() {
+  const now = new Date();
+  const nextMidnight = new Date(now);
+  nextMidnight.setHours(24, 0, 1, 0);
+  setTimeout(() => {
+    renderCurrentDate();
+    scheduleNextDateUpdate();
+  }, nextMidnight - now);
+}
+
+// ============================================================
+// TIME-BASED GREETING (updates hourly)
+// ============================================================
+
+const greetingEl = document.getElementById('currentGreeting');
+
+function getGreeting(hour) {
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  if (hour >= 17 && hour < 21) return 'Good evening';
+  return 'Good night';
+}
+
+function renderGreeting() {
+  if (!greetingEl) return;
+  greetingEl.textContent = getGreeting(new Date().getHours());
+}
+
+// ============================================================
 // DOM REFERENCES
 // ============================================================
 
@@ -205,6 +251,14 @@ function init() {
   renderBalance(currentState);
   renderSavings(currentState);
   renderFilters(currentState);
+
+  // Current date — render now and refresh at each midnight
+  renderCurrentDate();
+  scheduleNextDateUpdate();
+
+  // Time-based greeting — render now and re-check every minute
+  renderGreeting();
+  setInterval(renderGreeting, 60000);
 
   // Fetch dynamic data
   fetchInitialData();
