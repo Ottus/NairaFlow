@@ -23,6 +23,18 @@ const BANKS = [
   { code: '103', name: 'Kuda Bank' },
   { code: '201', name: 'OPay' },
   { code: '050', name: 'Ecobank' },
+  { code: '011', name: 'First Bank of Nigeria' },
+  { code: '032', name: 'Union Bank of Nigeria' },
+  { code: '076', name: 'Polaris Bank' },
+  { code: '082', name: 'Keystone Bank' },
+  { code: '035', name: 'Wema Bank' },
+  { code: '232', name: 'Sterling Bank' },
+  { code: '221', name: 'Stanbic IBTC Bank' },
+  { code: '215', name: 'Unity Bank' },
+  { code: '301', name: 'Jaiz Bank' },
+  { code: '100', name: 'Providus Bank' },
+  { code: '313', name: 'Titan Trust Bank' },
+  { code: '503', name: 'VFD Microfinance Bank'}
 ];
 
 export default function SendMoneyForm() {
@@ -127,7 +139,7 @@ export default function SendMoneyForm() {
           style={{ borderColor: errors.bankCode ? 'var(--color-error)' : 'var(--color-border)', background: 'var(--color-surface-alt)' }}
         >
           <option value="">Select a bank</option>
-          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name}</option>)}
+          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name} ({b.code})</option>)}
         </select>
         {errors.bankCode && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.bankCode.message}</p>}
       </div>
