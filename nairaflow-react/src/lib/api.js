@@ -4,7 +4,8 @@
  */
 
 const BASE = '';
-
+// In production app, the base url must be specified
+// https://api.nairaflow.com/v1/payments
 async function apiFetch(url, options) {
   const res = await fetch(`${BASE}${url}`, options);
   if (!res.ok) {

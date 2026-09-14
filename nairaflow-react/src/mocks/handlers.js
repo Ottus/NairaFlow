@@ -8,13 +8,16 @@ import { generateTransactions, SAVINGS_PLANS, EXCHANGE_RATES } from './data';
 // Generate a stable set of transactions (refreshed per session)
 let cachedTransactions = generateTransactions(15);
 
+// Track dynamic balance (in kobo - starts at 2,450,000 NGN = 245,000,000 kobo)
+let currentBalance = 245000000;
+
 export const handlers = [
   // ─── GET /api/balance ───
   http.get('/api/balance', async () => {
     await delay(600);
     if (Math.random() < 0.05) return new HttpResponse(null, { status: 500 });
     return HttpResponse.json({
-      amount: 245000000,
+      amount: currentBalance,
       currency: 'NGN',
       trend: 12,
     });
@@ -37,16 +40,40 @@ export const handlers = [
       );
     }
     const body = await request.json();
+    const amountInKobo = Number(body.amount) * 100;
+    const transferFee = 15000; // 150 NGN fee in kobo
+    const currency = body.currency || 'NGN';
+
+    // Calculate total deduction from balance
+    let totalDeduction = amountInKobo + transferFee;
+
+    // For international transfers, convert to NGN equivalent (future enhancement)
+    if (currency !== 'NGN') {
+      // Import EXCHANGE_RATES for conversion
+      // For now, we'll handle international transfers similarly but note this is for future
+      // TODO: Implement proper currency conversion using EXCHANGE_RATES
+    }
+
+    // Deduct from balance (only if sufficient funds)
+    if (currentBalance >= totalDeduction) {
+      currentBalance -= totalDeduction;
+    } else {
+      return HttpResponse.json(
+        { error: 'Insufficient funds for this transfer.' },
+        { status:  400 }
+      );
+    }
+
     const newTx = {
       id: `tx-${Date.now()}`,
       description: body.narration || `Transfer to ${body.accountNumber}`,
-      amount: Number(body.amount) * 100,
-      currency: body.currency || 'NGN',
+      amount: amountInKobo,
+      currency: currency,
       status: 'success',
       bank: body.bankCode || 'GTBank',
       account: body.accountNumber,
       date: new Date().toISOString(),
-      fee: 15000,
+      fee: transferFee,
     };
     cachedTransactions = [newTx, ...cachedTransactions];
     return HttpResponse.json({
@@ -54,6 +81,7 @@ export const handlers = [
       reference: `NF-${Date.now()}`,
       amount: newTx.amount,
       recipient: body.accountNumber,
+      newBalance: currentBalance, // Include updated balance in response
     });
   }),
 
