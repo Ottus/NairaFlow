@@ -65,19 +65,31 @@ export function getGreeting() {
 
 /**
  * Nigerian bank code → name mapping.
+ * This matches the expanded bank list from SendMoneyForm.jsx
  */
 const BANKS = {
   '101': 'GTBank',
   '044': 'Access Bank',
-  '012': 'Fidelity Bank',
-  '050': 'Ecobank',
-  '103': 'Kuda Bank',
-  '302': 'Flutterwave',
   '401': 'Zenith Bank',
-  '201': 'OPay',
   '501': 'UBA',
+  '012': 'Fidelity Bank',
+  '103': 'Kuda Bank',
+  '201': 'OPay',
+  '050': 'Ecobank',
+  '011': 'First Bank of Nigeria',
+  '032': 'Union Bank of Nigeria',
+  '076': 'Polaris Bank',
+  '082': 'Keystone Bank',
+  '035': 'Wema Bank',
+  '232': 'Sterling Bank',
+  '221': 'Stanbic IBTC Bank',
+  '215': 'Unity Bank',
+  '301': 'Jaiz Bank',
+  '100': 'Providus Bank',
+  '313': 'Titan Trust Bank',
+  '503': 'VFD Microfinance Bank',
 };
 
 export function getBankName(code) {
-  return BANKS[code] ?? `Bank ${code}`;
+  return BANKS[code] || `${code}`;
 }

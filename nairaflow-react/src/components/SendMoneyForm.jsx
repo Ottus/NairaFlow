@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { sendTransfer } from '../lib/api';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { sendTransfer, fetchBalance } from '../lib/api';
 import { formatKobo } from '../lib/utils';
 import { useToast } from '../contexts/ToastContext';
 
@@ -23,11 +23,26 @@ const BANKS = [
   { code: '103', name: 'Kuda Bank' },
   { code: '201', name: 'OPay' },
   { code: '050', name: 'Ecobank' },
+  { code: '011', name: 'First Bank of Nigeria' },
+  { code: '032', name: 'Union Bank of Nigeria' },
+  { code: '076', name: 'Polaris Bank' },
+  { code: '082', name: 'Keystone Bank' },
+  { code: '035', name: 'Wema Bank' },
+  { code: '232', name: 'Sterling Bank' },
+  { code: '221', name: 'Stanbic IBTC Bank' },
+  { code: '215', name: 'Unity Bank' },
+  { code: '301', name: 'Jaiz Bank' },
+  { code: '100', name: 'Providus Bank' },
+  { code: '313', name: 'Titan Trust Bank' },
+  { code: '503', name: 'VFD Microfinance Bank'}
 ];
 
 export default function SendMoneyForm() {
   const toast = useToast();
   const queryClient = useQueryClient();
+
+  // Fetch current balance to show available funds and validate transfers
+  const balanceQuery = useQuery({ queryKey: ['balance'], queryFn: fetchBalance });
 
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     resolver: zodResolver(transferSchema),
@@ -37,7 +52,8 @@ export default function SendMoneyForm() {
   const mutation = useMutation({
     mutationFn: sendTransfer,
     onSuccess: (data) => {
-      toast.success(`Transfer sent! Ref: ${data.reference}`);
+      const newBalance = data.newBalance || balanceQuery.data?.amount;
+      toast.success(`Transfer sent! Ref: ${data.reference}. New balance: ${formatKobo(newBalance)}`);
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['balance'] });
       reset();
@@ -48,6 +64,17 @@ export default function SendMoneyForm() {
   });
 
   function onSubmit(data) {
+    // Validate sufficient balance before sending
+    const transferAmount = Number(data.amount) * 100; // Convert to kobo
+    const transferFee = 15000; // 150 NGN fee in kobo
+    const totalRequired = transferAmount + transferFee;
+    const availableBalance = balanceQuery.data?.amount || 0;
+
+    if (totalRequired > availableBalance) {
+      toast.error(`Insufficient funds. Available: ${formatKobo(availableBalance)}, Required: ${formatKobo(totalRequired)}`);
+      return;
+    }
+
     mutation.mutate(data);
   }
 
@@ -79,6 +106,14 @@ export default function SendMoneyForm() {
       style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
     >
       <h2 className="text-lg font-bold">Send Money</h2>
+
+      {/* Available Balance Display */}
+      {balanceQuery.data && (
+        <div className="rounded-lg p-3 text-sm" style={{ background: 'var(--color-surface-alt)', borderColor: 'var(--color-border)' }}>
+          <span style={{ color: 'var(--color-text-secondary)' }}>Available Balance: </span>
+          <span className="font-semibold">{formatKobo(balanceQuery.data.amount)}</span>
+        </div>
+      )}
 
       {/* Account Number */}
       <div>

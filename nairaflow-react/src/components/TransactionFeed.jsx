@@ -1,5 +1,5 @@
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate } from '../lib/utils';
+import { formatKobo, formatDate, getBankName } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -26,7 +26,7 @@ function TransactionRow({ description, bank, account, amount, status, date }) {
       <div className="min-w-0">
         <p className="font-medium text-sm truncate">{description}</p>
         <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
-          {bank} · {account}
+          {getBankName(bank)} · {account}
         </p>
       </div>
       <p className="text-sm font-semibold text-right" style={{ color: 'var(--color-error)' }}>
