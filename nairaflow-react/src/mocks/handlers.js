@@ -5,6 +5,34 @@
 import { http, HttpResponse, delay } from 'msw';
 import { generateTransactions, SAVINGS_PLANS, EXCHANGE_RATES } from './data';
 
+// Bank code to name mapping (matches the expanded list in SendMoneyForm.jsx)
+const BANK_NAMES = {
+  '101': 'GTBank',
+  '044': 'Access Bank',
+  '401': 'Zenith Bank',
+  '501': 'UBA',
+  '012': 'Fidelity Bank',
+  '103': 'Kuda Bank',
+  '201': 'OPay',
+  '050': 'Ecobank',
+  '011': 'First Bank of Nigeria',
+  '032': 'Union Bank of Nigeria',
+  '076': 'Polaris Bank',
+  '082': 'Keystone Bank',
+  '035': 'Wema Bank',
+  '232': 'Sterling Bank',
+  '221': 'Stanbic IBTC Bank',
+  '215': 'Unity Bank',
+  '301': 'Jaiz Bank',
+  '100': 'Providus Bank',
+  '313': 'Titan Trust Bank',
+  '503': 'VFD Microfinance Bank',
+};
+
+function getBankName(code) {
+  return BANK_NAMES[code] || `${code}`;
+}
+
 // Generate a stable set of transactions (refreshed per session)
 let cachedTransactions = generateTransactions(15);
 
@@ -70,7 +98,7 @@ export const handlers = [
       amount: amountInKobo,
       currency: currency,
       status: 'success',
-      bank: body.bankCode || 'GTBank',
+      bank: getBankName(body.bankCode) || 'GTBank', // Store bank name instead of code
       account: body.accountNumber,
       date: new Date().toISOString(),
       fee: transferFee,

@@ -139,7 +139,7 @@ export default function SendMoneyForm() {
           style={{ borderColor: errors.bankCode ? 'var(--color-error)' : 'var(--color-border)', background: 'var(--color-surface-alt)' }}
         >
           <option value="">Select a bank</option>
-          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name} ({b.code})</option>)}
+          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name}</option>)}
         </select>
         {errors.bankCode && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.bankCode.message}</p>}
       </div>
