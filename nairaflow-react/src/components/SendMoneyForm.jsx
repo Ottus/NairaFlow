@@ -15,26 +15,35 @@ const transferSchema = z.object({
 });
 
 const BANKS = [
+  { code: '', name: "'Commercial Banks'" },
+
   { code: '101', name: 'GTBank' },
   { code: '044', name: 'Access Bank' },
   { code: '401', name: 'Zenith Bank' },
   { code: '501', name: 'UBA' },
   { code: '012', name: 'Fidelity Bank' },
-  { code: '103', name: 'Kuda Bank' },
-  { code: '201', name: 'OPay' },
+  { code: '221', name: 'Stanbic IBTC Bank' },
+  { code: '215', name: 'Unity Bank' },
   { code: '050', name: 'Ecobank' },
   { code: '011', name: 'First Bank of Nigeria' },
   { code: '032', name: 'Union Bank of Nigeria' },
   { code: '076', name: 'Polaris Bank' },
   { code: '082', name: 'Keystone Bank' },
-  { code: '035', name: 'Wema Bank' },
   { code: '232', name: 'Sterling Bank' },
-  { code: '221', name: 'Stanbic IBTC Bank' },
-  { code: '215', name: 'Unity Bank' },
+
+  { code: '', name: "'Fintech'" },
+
+  { code: '103', name: 'Kuda Bank' },
+  { code: '201', name: 'OPay' },
+  { code: '035', name: 'Wema Bank' },
   { code: '301', name: 'Jaiz Bank' },
   { code: '100', name: 'Providus Bank' },
   { code: '313', name: 'Titan Trust Bank' },
-  { code: '503', name: 'VFD Microfinance Bank'}
+  { code: '503', name: 'VFD Microfinance Bank'},
+  { code: '302', name: 'Rubies Microfinance Bank' },
+  { code: '304', name: 'Sparkle Microfinance Bank' },
+  { code: '303', name: 'Paga Microfinance Bank' },
+  { code: '305', name: 'Paycom Microfinance Bank' },
 ];
 
 export default function SendMoneyForm() {
