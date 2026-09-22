@@ -95,3 +95,98 @@ const BANKS = {
 export function getBankName(code) {
   return BANKS[code] || `${code}`;
 }
+
+/**
+ * Categorize transactions based on description patterns so that filtering can be easy spotted.
+ */
+export function categorizeTransaction(description) {
+  const desc = description.toLowerCase();
+
+  // Transfers category (check first as it's most common)
+  if (desc.includes('transfer to')) {
+    return 'Transfers';
+  }
+
+  // TV category
+  if (desc.includes('netflix') || desc.includes('spotify')) {
+    return 'TV';
+  }
+
+  // Connectivity category
+  if (desc.includes('airtime') || desc.includes('data bundle')) {
+    return 'Connectivity';
+  }
+
+  // Online Payment category
+  if (desc.includes('water bill') || desc.includes('usd top-up') || desc.includes('top-up')) {
+    return 'Online Payment';
+  }
+
+  // Safebox category
+  if (desc.includes('safelock')) {
+    return 'Safebox';
+  }
+
+  // Electricity category
+  if (desc.includes('electricity')) {
+    return 'Electricity';
+  }
+
+  // Default: Transfers and other transactions
+  return 'Transfers';
+}
+
+/**
+ * Filter transactions by category and date range
+ */
+export function filterTransactions(transactions, filter, dateRange = null) {
+  let filtered = transactions;
+
+  // Apply category/status filter
+  if (filter === 'all') {
+    filtered = transactions;
+  } else if (['success', 'pending', 'failed'].includes(filter)) {
+    // Status-based filtering
+    filtered = transactions.filter((tx) => tx.status === filter);
+  } else {
+    // Category-based filtering
+    filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
+  }
+
+  // Apply custom date range filter if provided
+  if (dateRange && dateRange.startDate && dateRange.endDate) {
+    const startDate = new Date(dateRange.startDate);
+    const endDate = new Date(dateRange.endDate);
+
+    // Set end date to end of day for inclusive filtering
+    endDate.setHours(23, 59, 59, 999);
+
+    filtered = filtered.filter((tx) => {
+      const txDate = new Date(tx.date);
+      return txDate >= startDate && txDate <= endDate;
+    });
+  }
+
+  return filtered;
+}
+
+/**
+ * Format Date object to YYYY-MM-DD string for HTML5 date input
+ * This is the "React hack" for date inputs
+ */
+export function formatDateForInput(date) {
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Parse YYYY-MM-DD string to Date object
+ */
+export function parseDateFromInput(dateString) {
+  if (!dateString) return null;
+  return new Date(dateString);
+}

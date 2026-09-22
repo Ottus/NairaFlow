@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate, getBankName } from '../lib/utils';
+import { formatKobo, formatDate, getBankName, filterTransactions, formatDateForInput, parseDateFromInput } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -46,13 +47,50 @@ function TransactionRow({ description, bank, account, amount, status, date }) {
  * Here, useState holds the filter and the list filters declaratively.
  */
 export default function TransactionFeed({ transactions, filter, onFilterChange }) {
-  // Filter transactions
-  const filtered =
-    filter === 'all'
-      ? transactions
-      : transactions.filter((tx) => tx.status === filter);
+  // Add custom date range state
+  const [dateRange, setDateRange] = useState({
+    startDate: null,
+    endDate: null
+  });
+  const [showDateFilter, setShowDateFilter] = useState(false);
 
-  const filters = ['all', 'success', 'pending', 'failed'];
+  // Filter transactions using the utility function
+  const filtered = filterTransactions(transactions, filter, dateRange);
+
+  // Define all available filters
+  const categoryFilters = [
+    { value: 'all', label: 'All' },
+    { value: 'success', label: 'Success' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'failed', label: 'Failed' },
+    { value: 'Transfers', label: 'Transfers' },
+    { value: 'Electricity', label: 'Electricity' },
+    { value: 'Connectivity', label: 'Connectivity' },
+    { value: 'TV', label: 'TV' },
+    { value: 'Online Payment', label: 'Online Payment' },
+    { value: 'Safebox', label: 'Safebox' },
+  ];
+
+  // Handle date range changes
+  const handleStartDateChange = (e) => {
+    setDateRange(prev => ({
+      ...prev,
+      startDate: parseDateFromInput(e.target.value)
+    }));
+  };
+
+  const handleEndDateChange = (e) => {
+    setDateRange(prev => ({
+      ...prev,
+      endDate: parseDateFromInput(e.target.value)
+    }));
+  };
+
+  const clearDateFilter = () => {
+    setDateRange({ startDate: null, endDate: null });
+  };
+
+  const hasActiveDateFilter = dateRange.startDate || dateRange.endDate;
 
   return (
     <section
@@ -60,35 +98,90 @@ export default function TransactionFeed({ transactions, filter, onFilterChange }
       style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
     >
       {/* Filter bar */}
-      <div className="flex gap-2 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-        {filters.map((f) => (
+      <div className="space-y-3 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+        {/* Category filters */}
+        <div className="flex flex-wrap gap-2">
+          {categoryFilters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => onFilterChange(f.value)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                filter === f.value
+                  ? 'text-white'
+                  : 'hover:opacity-80'
+              }`}
+              style={
+                filter === f.value
+                  ? { background: 'var(--color-brand)' }
+                  : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
+              }
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Date range filter */}
+        <div className="flex items-center gap-2">
           <button
-            key={f}
-            onClick={() => onFilterChange(f)}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-              filter === f
-                ? 'text-white'
-                : 'hover:opacity-80'
-            }`}
-            style={
-              filter === f
-                ? { background: 'var(--color-brand)' }
-                : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
-            }
+            onClick={() => setShowDateFilter(!showDateFilter)}
+            className="text-xs font-medium cursor-pointer hover:opacity-80"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
+            📅 Date Range {hasActiveDateFilter ? '(Active)' : ''}
           </button>
-        ))}
+
+          {showDateFilter && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1">
+                <label className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>From:</label>
+                <input
+                  type="date"
+                  value={formatDateForInput(dateRange.startDate)}
+                  onChange={handleStartDateChange}
+                  className="px-2 py-1 rounded text-xs border"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-alt)', color: 'var(--color-text)' }}
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <label className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>To:</label>
+                <input
+                  type="date"
+                  value={formatDateForInput(dateRange.endDate)}
+                  onChange={handleEndDateChange}
+                  className="px-2 py-1 rounded text-xs border"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-alt)', color: 'var(--color-text)' }}
+                />
+              </div>
+              {hasActiveDateFilter && (
+                <button
+                  onClick={clearDateFilter}
+                  className="text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80"
+                  style={{ background: 'var(--color-error)', color: 'white' }}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Transaction rows */}
       <div>
         {filtered.length === 0 ? (
           <p className="p-8 text-center text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-            No {filter} transactions found.
+            No transactions found for the selected filters.
+            {hasActiveDateFilter && ` Try adjusting the date range or clear the date filter.`}
           </p>
         ) : (
-          filtered.map((tx) => <TransactionRow key={tx.id} {...tx} />)
+          <div>
+            <p className="px-4 py-2 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+              Showing {filtered.length} transaction{filtered.length !== 1 ? 's' : ''}
+              {hasActiveDateFilter && ` for selected date range`}
+            </p>
+            {filtered.map((tx) => <TransactionRow key={tx.id} {...tx} />)}
+          </div>
         )}
       </div>
     </section>

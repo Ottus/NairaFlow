@@ -21,7 +21,13 @@ const DESCRIPTIONS = [
   'Transfer to', 'Airtime - MTN', 'Airtime - Glo', 'Data Bundle - Airtel',
   'Electricity - EKEDC', 'Netflix Subscription', 'Spotify Premium',
   'Safelock - Monthly', 'USD Top-up', 'Water Bill',
+
 ];
+
+// Data Bundle + Airtime = Connectivity
+// Netflix Subscription as TV
+// Water Bill + USD Top-Up as Online Payment
+// Safelock as Safebox
 
 const STATUSES = ['success', 'success', 'success', 'success', 'pending', 'failed'];
 
