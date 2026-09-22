@@ -153,7 +153,7 @@ export default function SendMoneyForm() {
           <option value="">Select a bank</option>
           <optgroup label="Commercial Banks">
             {BANK_GROUPS.commercial.map(bank => (
-              <option key={bank.code} value={bank.code}>{bank.name}</option>
+              <option key={bank.code} value={bank.code}>{bank.name}test</option>
             ))}
           </optgroup>
           <optgroup label="Digital Banks">
