@@ -5,15 +5,15 @@
 import { http, HttpResponse, delay } from 'msw';
 import { generateTransactions, SAVINGS_PLANS, EXCHANGE_RATES } from './data';
 
-// Bank code to name mapping (matches the expanded list in SendMoneyForm.jsx)
+// Bank code to name mapping (matches the grouped list in SendMoneyForm.jsx)
 const BANK_NAMES = {
+  // Commercial Banks
   '101': 'GTBank',
   '044': 'Access Bank',
   '401': 'Zenith Bank',
   '501': 'UBA',
   '012': 'Fidelity Bank',
   '103': 'Kuda Bank',
-  '201': 'OPay',
   '050': 'Ecobank',
   '011': 'First Bank of Nigeria',
   '032': 'Union Bank of Nigeria',
@@ -24,6 +24,8 @@ const BANK_NAMES = {
   '221': 'Stanbic IBTC Bank',
   '215': 'Unity Bank',
   '301': 'Jaiz Bank',
+  // Digital Banks
+  '201': 'OPay',
   '100': 'Providus Bank',
   '313': 'Titan Trust Bank',
   '503': 'VFD Microfinance Bank',

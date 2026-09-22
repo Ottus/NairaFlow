@@ -65,16 +65,16 @@ export function getGreeting() {
 
 /**
  * Nigerian bank code → name mapping.
- * This matches the expanded bank list from SendMoneyForm.jsx
+ * This matches the grouped bank list from SendMoneyForm.jsx
  */
 const BANKS = {
+  // Commercial Banks
   '101': 'GTBank',
   '044': 'Access Bank',
   '401': 'Zenith Bank',
   '501': 'UBA',
   '012': 'Fidelity Bank',
   '103': 'Kuda Bank',
-  '201': 'OPay',
   '050': 'Ecobank',
   '011': 'First Bank of Nigeria',
   '032': 'Union Bank of Nigeria',
@@ -85,6 +85,8 @@ const BANKS = {
   '221': 'Stanbic IBTC Bank',
   '215': 'Unity Bank',
   '301': 'Jaiz Bank',
+  // Digital Banks
+  '201': 'OPay',
   '100': 'Providus Bank',
   '313': 'Titan Trust Bank',
   '503': 'VFD Microfinance Bank',

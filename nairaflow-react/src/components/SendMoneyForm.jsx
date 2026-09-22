@@ -14,28 +14,40 @@ const transferSchema = z.object({
   narration: z.string().max(100, 'Max 100 characters').optional(),
 });
 
-const BANKS = [
-  { code: '101', name: 'GTBank' },
-  { code: '044', name: 'Access Bank' },
-  { code: '401', name: 'Zenith Bank' },
-  { code: '501', name: 'UBA' },
-  { code: '012', name: 'Fidelity Bank' },
-  { code: '103', name: 'Kuda Bank' },
-  { code: '201', name: 'OPay' },
-  { code: '050', name: 'Ecobank' },
-  { code: '011', name: 'First Bank of Nigeria' },
-  { code: '032', name: 'Union Bank of Nigeria' },
-  { code: '076', name: 'Polaris Bank' },
-  { code: '082', name: 'Keystone Bank' },
-  { code: '035', name: 'Wema Bank' },
-  { code: '232', name: 'Sterling Bank' },
-  { code: '221', name: 'Stanbic IBTC Bank' },
-  { code: '215', name: 'Unity Bank' },
-  { code: '301', name: 'Jaiz Bank' },
-  { code: '100', name: 'Providus Bank' },
-  { code: '313', name: 'Titan Trust Bank' },
-  { code: '503', name: 'VFD Microfinance Bank'}
-];
+const BANK_GROUPS = {
+  commercial: [
+    { code: '101', name: 'GTBank' },
+    { code: '044', name: 'Access Bank' },
+    { code: '401', name: 'Zenith Bank' },
+    { code: '501', name: 'UBA' },
+    { code: '012', name: 'Fidelity Bank' },
+    { code: '103', name: 'Kuda Bank' },
+    { code: '050', name: 'Ecobank' },
+    { code: '011', name: 'First Bank of Nigeria' },
+    { code: '032', name: 'Union Bank of Nigeria' },
+    { code: '076', name: 'Polaris Bank' },
+    { code: '082', name: 'Keystone Bank' },
+    { code: '035', name: 'Wema Bank' },
+    { code: '232', name: 'Sterling Bank' },
+    { code: '221', name: 'Stanbic IBTC Bank' },
+    { code: '215', name: 'Unity Bank' },
+    { code: '301', name: 'Jaiz Bank' },
+  ],
+  digital: [
+    { code: '201', name: 'OPay' },
+    { code: '100', name: 'Providus Bank' },
+    { code: '313', name: 'Titan Trust Bank' },
+    { code: '503', name: 'VFD Microfinance Bank' },
+],
+};
+
+// Helper function to get bank name from code
+function getBankName(code) {
+  const allBanks = [...BANK_GROUPS.commercial, ...BANK_GROUPS.digital];
+  const bank = allBanks.find(b => b.code === code);
+  return bank?.name || `Bank ${code}`;
+}
+
 
 export default function SendMoneyForm() {
   const toast = useToast();
@@ -139,7 +151,16 @@ export default function SendMoneyForm() {
           style={{ borderColor: errors.bankCode ? 'var(--color-error)' : 'var(--color-border)', background: 'var(--color-surface-alt)' }}
         >
           <option value="">Select a bank</option>
-          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name}</option>)}
+          <optgroup label="Commercial Banks">
+            {BANK_GROUPS.commercial.map(bank => (
+              <option key={bank.code} value={bank.code}>{bank.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Digital Banks">
+            {BANK_GROUPS.digital.map(bank => (
+              <option key={bank.code} value={bank.code}>{bank.name}</option>
+            ))}
+          </optgroup>
         </select>
         {errors.bankCode && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.bankCode.message}</p>}
       </div>

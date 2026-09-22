@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
-      const saved = localStorage.getItem('nairaflow_auth');
+      const saved = localStorage.getItem('nairaflow_auth_V1');
       return saved !== null ? saved === 'true' : true; // Default logged in for smooth dev/demo
     } catch {
       return true;
@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
     if (email && password) {
       setIsAuthenticated(true);
       try {
-        localStorage.setItem('nairaflow_auth', 'true');
+        localStorage.setItem('nairaflow_auth_V1', 'true');
       } catch (err) {
         console.warn('Unable to persist auth to localStorage', err);
       }
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setIsAuthenticated(false);
     try {
-      localStorage.setItem('nairaflow_auth', 'false');
+      localStorage.setItem('nairaflow_auth_V1', 'false');
     } catch (err) {
       console.warn('Unable to persist auth to localStorage', err);
     }
