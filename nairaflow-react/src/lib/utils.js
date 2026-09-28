@@ -65,17 +65,16 @@ export function getGreeting() {
 
 /**
  * Nigerian bank code → name mapping.
- * This matches the expanded bank list from SendMoneyForm.jsx
+ * This matches the grouped bank list from SendMoneyForm.jsx
  */
 const BANKS = {
-
+  // Commercial Banks
   '101': 'GTBank',
   '044': 'Access Bank',
   '401': 'Zenith Bank',
   '501': 'UBA',
   '012': 'Fidelity Bank',
   '103': 'Kuda Bank',
-  '201': 'OPay',
   '050': 'Ecobank',
   '011': 'First Bank of Nigeria',
   '032': 'Union Bank of Nigeria',
@@ -86,6 +85,8 @@ const BANKS = {
   '221': 'Stanbic IBTC Bank',
   '215': 'Unity Bank',
   '301': 'Jaiz Bank',
+  // Digital Banks
+  '201': 'OPay',
   '100': 'Providus Bank',
   '313': 'Titan Trust Bank',
   '503': 'VFD Microfinance Bank',
@@ -95,56 +96,49 @@ export function getBankName(code) {
   return BANKS[code] || `${code}`;
 }
 
-//HELPER FUNCTION FOR CATEGORIZING 
-
-export function categorizeTransaction(description){
-  //make each description lowercase to sanitize it
+export function categorizeTransaction(description) {
+  // Make each description lowercase to sanitize it
   const desc = description.toLowerCase();
 
-  //Transfer category - (tansfer to) is common 
-  if (desc.includes('transfer to')) {
-    return 'Transfers';
-  }
+  // Transfer category - (transfer-t0) is common
 
-  // TV category
-  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('audiomack')) {
-    return 'TV';
-  }
+  if (desc.includes('transfer to')) { 
+    return 'Transfer';
+   }
 
-  //Airtime top-up
-  if (desc.includes('airtime') || desc.includes('data bundle')){
-    return 'Connectivity';
-  }
+  // TV category 
+  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('capcut')) { return 'TV'; }
 
-  //Online Payment
-  if (desc.includes('water bill')|| desc.includes('usd top-up') || desc.includes('top-up')){
-    return 'Online Payment';
-  }
+  // Airtime category
+  if (desc.includes('airtime')) { return 'Airtime'; }
+  
+  // Data category
+  if (desc.includes('data')) { return 'Data'; }
 
-  //Safelock
- if (desc.includes('safelock')){
-    return 'Safebox';
-  }
+  // utility category
+  if (desc.includes('electricity') || desc.includes('water')) { return 'Utility'; }
 
-  //Electricity 
- if (desc.includes('electricity')){
-    return 'Electricity';
-  }
+  // Safelock category
+  if (desc.includes('safelock')) { return 'Safelock'; }
 
-  //default return 
-  return 'Transfers';
+  
+  return 'Transfer';
+
 }
-
-export function filterTransaction(transactions, filter){
-    //initial state 
+export function filterTransactions(transactions, filter) {
+  // initial state
   let filtered = transactions;
 
-  if(filter === 'all'){
-    filtered = transactions;
-  }else if (['success', 'pending', 'failed'].includes(filter)){
+  if (filter === 'all') {
+    return transactions;
+  } else if (['success', 'pending', 'failed'].includes(filter)){
     filtered = transactions.filter((tx) => tx.status === filter);
-  }else {
+  } else {
     filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
-  } 
+  }
   return filtered;
+
+
+  // The ommision of return the filtered result was the issues, the component could not see the final result and so the blank out
+
 }

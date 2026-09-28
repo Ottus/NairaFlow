@@ -1,5 +1,5 @@
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate, getBankName, filterTransaction } from '../lib/utils';
+import { formatKobo, formatDate, getBankName, filterTransactions } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -46,39 +46,48 @@ function TransactionRow({ description, bank, account, amount, status, date }) {
  * Here, useState holds the filter and the list filters declaratively.
  */
 export default function TransactionFeed({ transactions, filter, onFilterChange }) {
- 
-  const filtered = filterTransaction(transactions, filter);
-  // const filters = ['all', 'success', 'pending', 'failed', "tv", "online subscription", "Electicity", "Connectivity"];
-
-  const categoryFilter = [{value:'all', label: 'All'},{value:'success', label: 'Success'},{value:'pending', label: 'Pending'},{value:'failed', label: 'Failed'},{value:'Transfers', label: 'Transfers'},{value:'Electricity', label: 'Electricity'},{value:'Connectivity', label: 'Connectivity'},{value:'TV', label: 'TV'},{value:'Online Payment', label: 'Online Payment'},{value:'Safebox', label: 'Safebox'},
+  const filtered = filterTransactions(transactions, filter);
+  const filters = [
+    {value: 'all', label: 'All'},
+    {value: 'success', label: 'Success'},
+    {value: 'pending', label: 'Pending'},
+    {value: 'failed', label: 'Failed'},
+    {value: 'Transfer', label: 'Transfer'},
+    {value: 'TV', label: 'TV'},
+    {value: 'Airtime', label: 'Airtime'},
+    {value: 'Data', label: 'Data'},
+    {value: 'Utility', label: 'Utility'},
+    {value: 'Safelock', label: 'Safelock'}
   ];
-
   return (
     <section
       className="rounded-xl border overflow-hidden"
       style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
     >
       {/* Filter bar */}
-      <div className="space-y-3 gap-2 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+      <div
+        className="space-y-3 p-4 border-b"
+        style={{ borderColor: 'var(--color-border)' }}
+      >
         <div className="flex flex-wrap gap-2">
-        {categoryFilter.map((f) => (
-          <button
-            key={f.value}
-            onClick={() => onFilterChange(f.value)}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-              filter === f.value
-                ? 'text-white'
-                : 'hover:opacity-80'
-            }`}
-            style={
-              filter === f.value
-                ? { background: 'var(--color-brand)' }
-                : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
-            }
-          >
-            {f.label}
-          </button>
-        ))}
+          {filters.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => onFilterChange(value)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                filter === value
+                  ? 'text-white'
+                  : 'hover:opacity-80'
+              }`}
+              style={
+                filter === value
+                  ? { background: 'var(--color-brand)' }
+                  : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
+              }
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
