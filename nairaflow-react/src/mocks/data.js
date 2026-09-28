@@ -21,6 +21,9 @@ const DESCRIPTIONS = [
   'Transfer to', 'Airtime - MTN', 'Airtime - Glo', 'Data Bundle - Airtel',
   'Electricity - EKEDC', 'Netflix Subscription', 'Spotify Premium',
   'Safelock - Monthly', 'USD Top-up', 'Water Bill',
+   'Airtime - 9mobile', 'Data Bundle - 9mobile',
+  'Transfer to', 'Airtime - MTN', 'Airtime - Glo', 'Data Bundle - Airtel',
+  'Electricity - IKEDC', 'Apple Subscription', 'Audiomack Premium',
 ];
 
 const STATUSES = ['success', 'success', 'success', 'success', 'pending', 'failed'];

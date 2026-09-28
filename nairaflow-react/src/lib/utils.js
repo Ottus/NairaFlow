@@ -95,3 +95,55 @@ const BANKS = {
 export function getBankName(code) {
   return BANKS[code] || `${code}`;
 }
+
+// Helper function for categorizing
+
+export function categorizeTransaction(description){
+  // Make each description lowercase to sanitize it
+  const desc = description.toLowerCase();
+
+  // Transfer category - (transfer to) is common
+  if (desc.includes('transfer to')){
+    return 'Transfers';
+  }
+
+  //TV category
+  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('audiomack')){
+    return 'TV';
+  }
+
+  if (desc.includes('airtime') || desc.includes('data bundle')){
+    return 'Connectivity';
+  }
+
+  if (desc.includes('water bill') || desc.includes('usd top-up') || desc.includes('top-up')){
+    return 'Online Payment';
+  }
+
+  if (desc.includes('safelock')){
+    return 'Safebox';
+  }
+
+  if (desc.includes('electricity')){
+    return 'Electricity';
+  }
+  // default return
+  return 'Transfers';
+}
+
+export function filterTransaction(transactions, filter){
+  // initial state
+  let filtered = transactions;
+
+  if(filter === 'all'){
+    filtered = transactions;
+  } else if (['success', 'pending', 'failed'].includes(filter)){
+    filtered = transactions.filter((tx) => tx.status === filter);
+  } else {
+    filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
+  }
+   return filtered;
+// The ommision of return the filtered result was the issues, the component could not see the final result and so the blank out
+}
+
+// Todo : To add date filtering 
