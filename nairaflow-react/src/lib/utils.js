@@ -93,3 +93,50 @@ const BANKS = {
 export function getBankName(code) {
   return BANKS[code] || `${code}`;
 }
+
+export function categorizeTransaction(description) {
+  // Make each description lowercase to sanitize it
+  const desc = description.toLowerCase();
+
+  // Transfer category - (transfer-t0) is common
+
+  if (desc.includes('transfer to')) { 
+    return 'Transfer';
+   }
+
+  // TV category 
+  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('capcut')) { return 'TV'; }
+
+  // Airtime category
+  if (desc.includes('airtime')) { return 'Airtime'; }
+  
+  // Data category
+  if (desc.includes('data')) { return 'Data'; }
+
+  // utility category
+  if (desc.includes('electricity') || desc.includes('water')) { return 'Utility'; }
+
+  // Safelock category
+  if (desc.includes('safelock')) { return 'Safelock'; }
+
+  
+  return 'Transfer';
+
+}
+export function filterTransactions(transactions, filter) {
+  // initial state
+  let filtered = transactions;
+
+  if (filter === 'all') {
+    return transactions;
+  } else if (['success', 'pending', 'failed'].includes(filter)){
+    filtered = transactions.filter((tx) => tx.status === filter);
+  } else {
+    filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
+  }
+  return filtered;
+
+
+  // The ommision of return the filtered result was the issues, the component could not see the final result and so the blank out
+
+}

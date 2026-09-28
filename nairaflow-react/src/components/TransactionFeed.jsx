@@ -1,5 +1,5 @@
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate, getBankName } from '../lib/utils';
+import { formatKobo, formatDate, getBankName, filterTransactions } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -46,39 +46,49 @@ function TransactionRow({ description, bank, account, amount, status, date }) {
  * Here, useState holds the filter and the list filters declaratively.
  */
 export default function TransactionFeed({ transactions, filter, onFilterChange }) {
-  // Filter transactions
-  const filtered =
-    filter === 'all'
-      ? transactions
-      : transactions.filter((tx) => tx.status === filter);
-
-  const filters = ['all', 'success', 'pending', 'failed'];
-
+  const filtered = filterTransactions(transactions, filter);
+  const filters = [
+    {value: 'all', label: 'All'},
+    {value: 'success', label: 'Success'},
+    {value: 'pending', label: 'Pending'},
+    {value: 'failed', label: 'Failed'},
+    {value: 'Transfer', label: 'Transfer'},
+    {value: 'TV', label: 'TV'},
+    {value: 'Airtime', label: 'Airtime'},
+    {value: 'Data', label: 'Data'},
+    {value: 'Utility', label: 'Utility'},
+    {value: 'Safelock', label: 'Safelock'}
+  ];
   return (
     <section
       className="rounded-xl border overflow-hidden"
       style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
     >
       {/* Filter bar */}
-      <div className="flex gap-2 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-        {filters.map((f) => (
-          <button
-            key={f}
-            onClick={() => onFilterChange(f)}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-              filter === f
-                ? 'text-white'
-                : 'hover:opacity-80'
-            }`}
-            style={
-              filter === f
-                ? { background: 'var(--color-brand)' }
-                : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
-            }
-          >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
-        ))}
+      <div
+        className="space-y-3 p-4 border-b"
+        style={{ borderColor: 'var(--color-border)' }}
+      >
+        <div className="flex flex-wrap gap-2">
+          {filters.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => onFilterChange(value)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                filter === value
+                  ? 'text-white'
+                  : 'hover:opacity-80'
+              }`}
+              style={
+                filter === value
+                  ? { background: 'var(--color-brand)' }
+                  : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
+              }
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Transaction rows */}

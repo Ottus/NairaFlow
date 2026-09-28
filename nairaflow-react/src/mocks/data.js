@@ -21,6 +21,14 @@ const DESCRIPTIONS = [
   'Transfer to', 'Airtime - MTN', 'Airtime - Glo', 'Data Bundle - Airtel',
   'Electricity - EKEDC', 'Netflix Subscription', 'Spotify Premium',
   'Safelock - Monthly', 'USD Top-up', 'Water Bill',
+  'Electricity - Ikeja', 'Data Bundle - 9mobile', 'Data Bundle - MTN',
+  'Netflix Subscription', 'Water Bill - LWC', 'USD Top-up',
+  'Transfer from', 'Airtime - 9mobile', 'Data Bundle - Glo', 'Electricity - PHED',
+  'Netflix Subscription', 'Spotify Premium', 'Safelock - Monthly',
+  'USD Top-up', 'Water Bill - EEDC', 'Electricity - AEDC', 'Data Bundle - Airtel',
+  'Capcut Pro Subscription', 'Netflix Subscription', 'Spotify Premium',
+  'Safelock - Monthly', 'USD Top-up', 'Water Bill - EEDC', 'Electricity - AEDC',
+  'Data Bundle - Airtel', 'Capcut Pro Subscription', 'Netflix Subscription',
 ];
 
 const STATUSES = ['success', 'success', 'success', 'success', 'pending', 'failed'];
