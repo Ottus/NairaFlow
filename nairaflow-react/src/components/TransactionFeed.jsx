@@ -98,6 +98,7 @@ export default function TransactionFeed({ transactions, filter, onFilterChange }
             {/* No transactions found for the selected filters. */}
             No transactions
           </p>
+
         ) : (
           <div>
             <p className = "px-4 px-2 text-xs" style ={{color: 'var(--color-text-tertiary)'}} >
