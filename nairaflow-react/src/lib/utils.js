@@ -68,6 +68,7 @@ export function getGreeting() {
  * This matches the expanded bank list from SendMoneyForm.jsx
  */
 const BANKS = {
+
   '101': 'GTBank',
   '044': 'Access Bank',
   '401': 'Zenith Bank',
@@ -92,4 +93,58 @@ const BANKS = {
 
 export function getBankName(code) {
   return BANKS[code] || `${code}`;
+}
+
+//HELPER FUNCTION FOR CATEGORIZING 
+
+export function categorizeTransaction(description){
+  //make each description lowercase to sanitize it
+  const desc = description.toLowerCase();
+
+  //Transfer category - (tansfer to) is common 
+  if (desc.includes('transfer to')) {
+    return 'Transfers';
+  }
+
+  // TV category
+  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('audiomack')) {
+    return 'TV';
+  }
+
+  //Airtime top-up
+  if (desc.includes('airtime') || desc.includes('data bundle')){
+    return 'Connectivity';
+  }
+
+  //Online Payment
+  if (desc.includes('water bill')|| desc.includes('usd top-up') || desc.includes('top-up')){
+    return 'Online Payment';
+  }
+
+  //Safelock
+ if (desc.includes('safelock')){
+    return 'Safebox';
+  }
+
+  //Electricity 
+ if (desc.includes('electricity')){
+    return 'Electricity';
+  }
+
+  //default return 
+  return 'Transfers';
+}
+
+export function filterTransaction(transactions, filter){
+    //initial state 
+  let filtered = transactions;
+
+  if(filter === 'all'){
+    filtered = transactions;
+  }else if (['success', 'pending', 'failed'].includes(filter)){
+    filtered = transactions.filter((tx) => tx.status === filter);
+  }else {
+    filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
+  } 
+  return filtered;
 }

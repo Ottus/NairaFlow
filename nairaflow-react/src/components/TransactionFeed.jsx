@@ -1,5 +1,5 @@
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate, getBankName } from '../lib/utils';
+import { formatKobo, formatDate, getBankName, filterTransaction } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -46,13 +46,12 @@ function TransactionRow({ description, bank, account, amount, status, date }) {
  * Here, useState holds the filter and the list filters declaratively.
  */
 export default function TransactionFeed({ transactions, filter, onFilterChange }) {
-  // Filter transactions
-  const filtered =
-    filter === 'all'
-      ? transactions
-      : transactions.filter((tx) => tx.status === filter);
+ 
+  const filtered = filterTransaction(transactions, filter);
+  // const filters = ['all', 'success', 'pending', 'failed', "tv", "online subscription", "Electicity", "Connectivity"];
 
-  const filters = ['all', 'success', 'pending', 'failed'];
+  const categoryFilter = [{value:'all', label: 'All'},{value:'success', label: 'Success'},{value:'pending', label: 'Pending'},{value:'failed', label: 'Failed'},{value:'Transfers', label: 'Transfers'},{value:'Electricity', label: 'Electricity'},{value:'Connectivity', label: 'Connectivity'},{value:'TV', label: 'TV'},{value:'Online Payment', label: 'Online Payment'},{value:'Safebox', label: 'Safebox'},
+  ];
 
   return (
     <section
@@ -60,35 +59,45 @@ export default function TransactionFeed({ transactions, filter, onFilterChange }
       style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
     >
       {/* Filter bar */}
-      <div className="flex gap-2 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-        {filters.map((f) => (
+      <div className="space-y-3 gap-2 p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="flex flex-wrap gap-2">
+        {categoryFilter.map((f) => (
           <button
-            key={f}
-            onClick={() => onFilterChange(f)}
+            key={f.value}
+            onClick={() => onFilterChange(f.value)}
             className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-              filter === f
+              filter === f.value
                 ? 'text-white'
                 : 'hover:opacity-80'
             }`}
             style={
-              filter === f
+              filter === f.value
                 ? { background: 'var(--color-brand)' }
                 : { background: 'var(--color-surface-alt)', color: 'var(--color-text-secondary)' }
             }
           >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
+            {f.label}
           </button>
         ))}
+        </div>
       </div>
 
       {/* Transaction rows */}
       <div>
         {filtered.length === 0 ? (
           <p className="p-8 text-center text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-            No {filter} transactions found.
+            {/* No {filter} transactions found. */}
+            {/* No transaction found for the selected filters. */}
+            No transaction 
           </p>
+
         ) : (
-          filtered.map((tx) => <TransactionRow key={tx.id} {...tx} />)
+          <div>
+          <p className="px-4 px-2 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+            showing {filtered.length} transaction{filtered.length != 1 ? 's' : ''}
+          </p>
+          {filtered.map((tx) => <TransactionRow key={tx.id} {...tx} />)}
+          </div>
         )}
       </div>
     </section>

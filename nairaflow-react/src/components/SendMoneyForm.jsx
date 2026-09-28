@@ -14,14 +14,14 @@ const transferSchema = z.object({
   narration: z.string().max(100, 'Max 100 characters').optional(),
 });
 
-const BANKS = [
+
+const BANKS = {
+  Commercial: [
   { code: '101', name: 'GTBank' },
   { code: '044', name: 'Access Bank' },
   { code: '401', name: 'Zenith Bank' },
   { code: '501', name: 'UBA' },
   { code: '012', name: 'Fidelity Bank' },
-  { code: '103', name: 'Kuda Bank' },
-  { code: '201', name: 'OPay' },
   { code: '050', name: 'Ecobank' },
   { code: '011', name: 'First Bank of Nigeria' },
   { code: '032', name: 'Union Bank of Nigeria' },
@@ -34,8 +34,16 @@ const BANKS = [
   { code: '301', name: 'Jaiz Bank' },
   { code: '100', name: 'Providus Bank' },
   { code: '313', name: 'Titan Trust Bank' },
-  { code: '503', name: 'VFD Microfinance Bank'}
-];
+ 
+],
+Digital: [
+  { code: '201', name: 'OPay' },
+  { code: '103', name: 'Kuda Bank' },
+  { code: '503', name: 'VFD Microfinance Bank'},
+],
+};
+
+
 
 export default function SendMoneyForm() {
   const toast = useToast();
@@ -139,7 +147,17 @@ export default function SendMoneyForm() {
           style={{ borderColor: errors.bankCode ? 'var(--color-error)' : 'var(--color-border)', background: 'var(--color-surface-alt)' }}
         >
           <option value="">Select a bank</option>
-          {BANKS.map(b => <option key={b.code} value={b.code}>{b.name}</option>)}
+          <optgroup label = "Commercial Banks">
+            {BANKS.Commercial.map(bank =>(
+              <option key = {bank.code} value = {bank.code}>{bank.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label = "Digital Banks">
+            {BANKS.Digital.map(bank =>(
+              <option key = {bank.code} value = {bank.code}>{bank.name}</option>
+            ))}
+          </optgroup>
+          {/* {BANKS.map(b => <option key={b.code} value={b.code}>{b.name}</option>)} */}
         </select>
         {errors.bankCode && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.bankCode.message}</p>}
       </div>
