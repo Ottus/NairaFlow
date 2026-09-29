@@ -1,5 +1,5 @@
 import StatusPill from './StatusPill';
-import { formatKobo, formatDate, getBankName, filterTransaction } from '../lib/utils';
+import { formatKobo, formatDate, getBankName, filterTransactions } from '../lib/utils';
 
 /**
  * TransactionRow — A single transaction in the feed.
@@ -54,7 +54,7 @@ export default function TransactionFeed({ transactions, filter, onFilterChange }
 
   // const filters = ['all', 'success', 'pending', 'failed','Transfers','TV', 'Electricity', 'Online Payment', 'Safebox', 'Connectivity'];
 // Todo: we will work on dates 
-  const filtered = filterTransaction(transactions, filter);
+  const filtered = filterTransactions(transactions, filter);
   
   const categoryFilter = [
     {value: 'all', label: 'All'},{value: 'success', label: 'Success'},{value: 'pending', label: 'Pending'},{value: 'failed', label: 'Failed'},{value: 'Transfers', label: 'Transfers'},{value: 'Electricity', label: 'Electricity'},{value: 'Connectivity', label: 'Connectivity'}, {value: 'TV', label: 'TV'},{value: 'Online Payment', label: 'Online Payment'},{value: 'Safebox', label: 'Safebox'},
