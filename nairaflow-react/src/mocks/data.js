@@ -43,6 +43,10 @@ export function generateTransactions(count = 15) {
   return Array.from({ length: count }, (_, i) => {
     const name = NIGERIAN_NAMES[i % NIGERIAN_NAMES.length];
     const desc = i < 10 ? `Transfer to ${name}` : randomItem(DESCRIPTIONS);
+    // Generate dates spanning different time periods for testing date filters
+    const daysAgo = Math.floor(Math.random() * 60); // Up to 60 days ago
+    const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+
     return {
       id: `tx-${String(i + 1).padStart(3, '0')}`,
       description: desc,
@@ -51,7 +55,7 @@ export function generateTransactions(count = 15) {
       status: randomItem(STATUSES),
       bank: randomItem(BANKS),
       account: String(Math.floor(Math.random() * 9000000000) + 1000000000),
-      date: new Date(Date.now() - i * 3600000 * (2 + Math.random() * 20)).toISOString(),
+      date: date.toISOString(),
       fee: Math.random() > 0.5 ? 15000 : 0,
     };
   });

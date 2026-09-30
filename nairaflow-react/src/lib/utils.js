@@ -106,38 +106,76 @@ export function categorizeTransaction(description) {
   // Transfer category - (transfer-t0) is common
 
   if (desc.includes('transfer to')) { 
-    return 'Transfer';
+    return 'Transfers';
+    // We had to change to transfers to ensure it is consitent
    }
 
   // TV category 
-  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('capcut')) { return 'TV'; }
+  if (desc.includes('netflix') || desc.includes('spotify') || desc.includes('apple') || desc.includes('capcut')) { 
+    return 'TV'; 
+  }
 
-  // Airtime category
-  if (desc.includes('airtime')) { return 'Airtime'; }
-  
-  // Data category
-  if (desc.includes('data')) { return 'Data'; }
+//  Connectivity
+  if(desc.includes('airtime') || desc.includes('data')){
+    return 'Connectivity';
+  }
 
   // utility category
-  if (desc.includes('electricity') || desc.includes('water')) { return 'Utility'; }
+  if (desc.includes('electricity')) { 
+    return 'Electricity'; 
+  }
+
+  if(desc.includes('úsd top-up') || desc.includes('water-bill') || desc.includes('top-up')){
+    return 'Online Payment';
+  }
 
   // Safelock category
-  if (desc.includes('safelock')) { return 'Safelock'; }
+  if (desc.includes('safelock')) { 
+    return 'Safebox'; 
+  }
 
   
-  return 'Transfer';
+  return 'Transfers';
 
 }
-export function filterTransactions(transactions, filter) {
+export function filterTransactions(transactions, filter, dateFilter = null) {
   // initial state
   let filtered = transactions;
 
   if (filter === 'all') {
-    return transactions;
+    filtered = transactions;
   } else if (['success', 'pending', 'failed'].includes(filter)){
     filtered = transactions.filter((tx) => tx.status === filter);
   } else {
     filtered = transactions.filter((tx) => categorizeTransaction(tx.description) === filter);
   }
+
+ // this is to ensure we have been given actaul date
+  if(dateFilter){
+   // this is to get the present time
+    const now = new Date(); 
+    // this allows presets
+    const filterDate = new Date();
+
+    switch(dateFilter){
+      case 'today':
+        filterDate.setHours(0, 0, 0, 0); 
+        break;
+      case 'week':
+        filterDate.setDate(now.getDate() - 7);
+        break;
+      case 'month':
+        filterDate.setMonth(now.getMonth() -1);
+        break;
+      case 'year':
+        filterDate.setFullYear(now.getFullYear() -1);
+        break;
+      default:
+        return filtered;
+    }
+    filtered = filtered.filter((tx) => new Date(tx.date) >= filterDate);
+    //this ensures that we have transactions for a date range
+  }
   return filtered;
+  // this ensure we take out all what has being filtered, both by status, category and date
 }
